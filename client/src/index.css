@@ -1,0 +1,942 @@
+/* client/src/index.css */
+
+/* ===== 1. GLOBAL RESET AND BODY ===== */
+
+/* Removes the browser default spacing and makes padding count inside element widths */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: hidden; /* stops a sideways scrollbar from appearing */
+}
+
+body {
+  background-color: #ffffff;
+  color: #222222;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== 2. PAGE LAYOUT ===== */
+
+/* The app is a vertical column: header, page content, footer */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* The content grows to fill the space so the footer stays at the bottom */
+.main-content {
+  flex-grow: 1;
+  width: 100%;
+  padding-top: 20px;
+}
+
+/* Keeps the page content centred on very wide screens */
+main {
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 24px 40px;
+}
+
+@media (max-width: 768px) {
+  main {
+    padding: 16px;
+  }
+}
+
+/* ===== 3. HEADER AND NAVBAR ===== */
+
+/* The header stays at the top of the screen while scrolling */
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 50;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f3f4f6;
+  transition: all 0.3s ease;
+}
+
+/* Wide centred box that holds the header content */
+.max-w-\[2520px\] {
+  max-width: 2520px;
+  margin: 0 auto;
+  padding: 0 80px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .max-w-\[2520px\] {
+    padding: 0 20px;
+  }
+}
+
+/* Top row of the header: logo on the left, account menu on the right */
+.flex.items-center.justify-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  width: 100%;
+  position: relative;
+}
+
+.navbar-logo-brand {
+  width: 102px;
+  height: 32px;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: left center;
+}
+
+.navbar-logo-link {
+  display: block;
+  text-decoration: none;
+  flex: 0 0 auto;
+}
+
+/* Alternative header layout: logo, search and buttons in one row */
+.airbnb-clone-header-shell {
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  padding: 16px 24px;
+  display: block;
+}
+
+.navbar-inner-content {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.navbar-search-wrapper-block {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.navbar-actions-panel {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ===== 4. CATEGORY TABS IN THE NAVBAR ===== */
+
+/* Tabs sit in the middle of the navbar and are hidden on small screens */
+.navbar-tabs-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .navbar-tabs-container {
+    display: none;
+  }
+}
+
+.navbar-tab-item {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 6px 0;
+  color: #717171;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navbar-tab-item:hover {
+  color: #222222;
+  border-bottom-color: #dddddd;
+}
+
+/* The selected tab gets a dark underline */
+.navbar-tab-item.active {
+  color: #222222;
+  border-bottom-color: #222222;
+}
+
+.navbar-tab-icon {
+  font-size: 18px;
+}
+
+.navbar-tab-label {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Second row of category links under the search bar */
+.navbar-categories-row-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 16px auto 0 auto;
+  padding-top: 12px;
+  display: flex;
+  justify-content: center;
+  border-top: 1px solid #f7f7f7;
+}
+
+.navbar-categories-menu {
+  display: flex;
+  gap: 32px;
+  justify-content: center;
+  align-items: center;
+}
+
+.category-link {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #717171;
+  cursor: pointer;
+}
+
+.category-link:hover {
+  color: #222222;
+}
+
+.active-category {
+  color: #222222;
+  font-weight: 600;
+  border-bottom-color: #222222;
+}
+
+/* ===== 5. SEARCH BAR PILLS ===== */
+
+.flex-1.flex.justify-center {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Big search bar shown at the top of the page */
+.divide-x {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 576px;
+  padding: 10px 24px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.divide-x > div {
+  flex: 1;
+  padding: 0 16px;
+  text-align: left;
+}
+
+.divide-x .font-bold {
+  display: block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.divide-x .text-gray-500 {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Small search pill shown after the page is scrolled */
+.space-x-3.bg-white {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 9999px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.space-x-3.bg-white button {
+  background: transparent;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+  cursor: pointer;
+}
+
+/* Round red search button */
+.bg-rose-500 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border-radius: 9999px;
+  background-color: #ff385c;
+  color: #ffffff;
+}
+
+.compact-search-bar-container {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 8px 8px 24px;
+  border: 1px solid #dddddd;
+  border-radius: 24px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+}
+
+.compact-search-bar-container:hover {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-pill-btn {
+  background: transparent;
+  border: none;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+  cursor: pointer;
+}
+
+.search-pill-btn.text-muted {
+  font-weight: 400;
+  color: #717171;
+}
+
+.search-pill-divider {
+  color: #dddddd;
+  user-select: none;
+}
+
+.search-icon-circle-badge {
+  width: 32px;
+  height: 32px;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ff385c;
+  color: #ffffff;
+}
+
+/* ===== 6. ACCOUNT MENU (RIGHT SIDE OF THE HEADER) ===== */
+
+.justify-end {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Rounded button with the hamburger icon and the avatar */
+.border-gray-200,
+.user-profile-menu-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 21px;
+  background-color: #ffffff;
+  color: #595959;
+  cursor: pointer;
+}
+
+.become-host-text-node {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+  cursor: pointer;
+}
+
+/* ===== 7. HOME PAGE LISTINGS GRID ===== */
+
+.home-view {
+  width: 100%;
+}
+
+/* Category buttons at the top of the home page */
+.home-view > div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px 0;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.home-view button {
+  background: transparent;
+  border: none;
+  padding: 8px 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #717171;
+  cursor: pointer;
+}
+
+/* Box around the grid. The side padding grows as the screen gets wider */
+.listings-section {
+  max-width: 2520px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .listings-section {
+    padding: 0 2.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .listings-section {
+    padding: 0 5rem;
+  }
+}
+
+.section-title,
+.text-2xl.font-bold {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222222;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.025em;
+}
+
+/* The grid fits as many 270px cards as the screen allows, so no extra media queries are needed */
+.listings-grid,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.listings-grid img {
+  width: 100%;
+  aspect-ratio: 20 / 19;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+/* ===== 8. LOGIN AND SIGN UP PAGE ===== */
+
+.login-page-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 80vh;
+  padding: 40px 20px;
+  background-color: #ffffff;
+}
+
+.login-card-box {
+  width: 100%;
+  max-width: 568px;
+  padding: 24px;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+}
+
+.login-header-zone {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eaeaea;
+  text-align: left;
+}
+
+.login-card-title {
+  margin-bottom: 8px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.login-card-subtitle {
+  font-size: 14px;
+  color: #717171;
+}
+
+/* Red box that shows validation and server errors */
+.login-error-alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  background-color: #fff8f8;
+}
+
+.error-alert-icon {
+  font-size: 16px;
+}
+
+.error-alert-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #c1351d;
+}
+
+.login-form-element {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* The email and password boxes share one border, split by a line */
+.login-input-field-group {
+  border: 1px solid #b0b0b0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.login-input-container-row {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 14px;
+  background-color: #ffffff;
+}
+
+.login-input-container-row:first-child {
+  border-bottom: 1px solid #b0b0b0;
+}
+
+.login-field-label {
+  margin-bottom: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #222222;
+}
+
+.login-text-input {
+  width: 100%;
+  padding: 2px 0;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #222222;
+}
+
+.login-text-input::placeholder {
+  color: #b0b0b0;
+}
+
+.login-submit-action-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.login-submit-action-btn:hover {
+  opacity: 0.95;
+}
+
+/* Used while the request is being sent */
+.btn-processing {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* The "or" line between the form and the other buttons */
+.login-divider-strip {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  text-align: center;
+  color: #717171;
+}
+
+.login-divider-strip::before,
+.login-divider-strip::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #eef0f2;
+}
+
+.divider-text-node {
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.login-alternative-actions {
+  width: 100%;
+}
+
+.login-alt-btn {
+  width: 100%;
+  border: 1px solid #222222;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #222222;
+}
+
+/* ===== 9. OLD LISTING DETAILS STYLES ===== */
+
+.details-image-frame {
+  width: 100%;
+  height: 480px;
+  margin-bottom: 32px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .details-image-frame {
+    height: 320px;
+  }
+}
+
+.details-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Text on the left, booking card on the right */
+.details-content-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .details-content-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.details-info-column {
+  text-align: left;
+}
+
+.details-host-greeting {
+  margin-bottom: 8px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.details-meta-badges {
+  font-size: 15px;
+  color: #717171;
+}
+
+.details-separator-line {
+  margin: 24px 0;
+  border: 0;
+  border-top: 1px solid #eaeaea;
+}
+
+.details-description-body {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #222222;
+}
+
+/* Booking card stays on screen while the page scrolls */
+.details-booking-card-panel {
+  position: sticky;
+  top: 120px;
+  padding: 24px;
+  border: 1px solid #dddddd;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 6px 16px;
+}
+
+.booking-card-header {
+  display: flex;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+
+.booking-price-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.booking-price-label {
+  font-size: 14px;
+  color: #717171;
+}
+
+.booking-primary-reserve-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(to right, #e61e4d 0%, #e31c5f 50%, #d70466 100%);
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.booking-primary-reserve-btn:hover {
+  opacity: 0.95;
+}
+
+.booking-disclaimer-tag {
+  margin-top: 12px;
+  font-size: 12px;
+  text-align: center;
+  color: #717171;
+}
+
+/* ===== 10. ADMIN PAGE ===== */
+
+.admin-page-shell {
+  width: 100%;
+  min-height: 85vh;
+  padding: 40px 0 80px 0;
+  background-color: #f7f7f7;
+}
+
+.admin-container-max {
+  max-width: 2520px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 80px;
+}
+
+@media (max-width: 768px) {
+  .admin-container-max {
+    padding: 0 20px;
+  }
+}
+
+.admin-header-zone {
+  margin-bottom: 32px;
+  text-align: left;
+}
+
+.admin-main-title {
+  margin-bottom: 8px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #222222;
+}
+
+/* Form on the left, list of listings on the right */
+.admin-layout-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .admin-layout-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-form-card,
+.admin-data-card {
+  padding: 28px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.04) 0px 4px 12px;
+  text-align: left;
+}
+
+.admin-section-heading {
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222222;
+}
+
+.admin-field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.admin-field-row-split {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.admin-form-input,
+.admin-form-select,
+.admin-form-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #b0b0b0;
+  border-radius: 8px;
+  outline: none;
+  background-color: #ffffff;
+  font-size: 14px;
+  color: #222222;
+  transition: border-color 0.2s ease;
+}
+
+.admin-form-input:focus,
+.admin-form-select:focus,
+.admin-form-textarea:focus {
+  border-color: #222222;
+}
+
+.admin-form-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* The list of listings scrolls inside its own box */
+.admin-listings-list-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 600px;
+  padding-right: 4px;
+  overflow-y: auto;
+}
+
+.admin-list-item-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  background-color: #ffffff;
+  transition: box-shadow 0.2s ease;
+}
+
+.admin-list-item-row:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.admin-list-thumb {
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.admin-list-item-info {
+  flex-grow: 1;
+  min-width: 0;
+}
+
+/* Long titles are cut off with three dots instead of breaking the row */
+.admin-item-title {
+  margin-bottom: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #222222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-item-meta {
+  font-size: 13px;
+  color: #717171;
+}
+
+.admin-row-delete-btn {
+  padding: 6px 12px;
+  border: 1px solid #c1351d;
+  border-radius: 6px;
+  background-color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c1351d;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-row-delete-btn:hover {
+  background-color: #fff8f8;
+}
+
+.admin-success-alert {
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  border: 1px solid #c6f6d5;
+  border-radius: 8px;
+  background-color: #f0fff4;
+}
+
+.success-alert-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #22543d;
+}

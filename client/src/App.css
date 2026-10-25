@@ -1,0 +1,336 @@
+/* client/src/App.css */
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ===== 1. STICKY HEADER WITH A FROSTED GLASS LOOK ===== */
+
+/* Header stays at the top and blurs whatever scrolls underneath it */
+.navbar-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-height: 140px;
+  padding: 16px 80px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  transition: padding 0.3s ease, min-height 0.3s ease;
+}
+
+/* When the page is scrolled the header gets smaller */
+.navbar-header.scrolled {
+  min-height: 70px;
+  padding: 8px 80px;
+}
+
+.navbar-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-user-menu {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.host-link {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #222222;
+}
+
+.user-pill {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  border: 1px solid #dddddd;
+  border-radius: 21px;
+  cursor: pointer;
+}
+
+/* ===== 2. CATEGORY TABS ===== */
+
+.category-navigation-tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  margin-bottom: 16px;
+}
+
+.category-tab-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0 12px 0;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #717171;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.category-tab-btn svg {
+  transition: transform 0.2s ease;
+}
+
+.category-tab-btn:hover {
+  color: #222222;
+}
+
+.category-tab-btn:hover svg {
+  transform: scale(1.05);
+}
+
+/* The selected tab is bold and gets a line under it */
+.category-tab-btn.active {
+  font-weight: 600;
+  color: #222222;
+}
+
+.category-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 2px;
+  background-color: #222222;
+}
+
+/* ===== 3. BIG SEARCH BAR (SHOWN BEFORE SCROLLING) ===== */
+
+.expanded-search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.search-tab {
+  display: flex;
+  align-items: center;
+  padding: 8px 10px 8px 24px;
+  border: 1px solid #dddddd;
+  border-radius: 40px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+  cursor: pointer;
+}
+
+.search-field label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #222222;
+}
+
+.search-field input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.85rem;
+  color: #717171;
+}
+
+.search-field .placeholder {
+  font-size: 0.85rem;
+  color: #717171;
+}
+
+/* Thin line between the search fields */
+.divider-v {
+  width: 1px;
+  height: 28px;
+  background-color: #dddddd;
+}
+
+.search-btn-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  background-color: #ff385c;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+/* ===== 4. SMALL SEARCH PILL (SHOWN AFTER SCROLLING) ===== */
+
+.compact-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 8px 6px 16px;
+  border: 1px solid #dddddd;
+  border-radius: 30px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.search-icon-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #ff385c;
+  color: #ffffff;
+}
+
+/* ===== 5. LISTING CARDS ===== */
+
+.listing-card-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.listing-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+}
+
+/* Square image box that hides anything sticking out */
+.listing-image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  margin-bottom: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #f7f7f7;
+}
+
+.listing-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Image zooms in a little when the card is hovered */
+.listing-card:hover .listing-image {
+  transform: scale(1.04);
+}
+
+.guest-favorite-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 8px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #222222;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.listing-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.listing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.listing-title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #222222;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listing-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #222222;
+}
+
+.listing-subtitle,
+.listing-dates {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #717171;
+}
+
+.listing-price {
+  margin-top: 4px;
+  font-size: 0.95rem;
+}
+
+.price-amount {
+  font-weight: 600;
+  color: #222222;
+}
+
+.price-period {
+  font-weight: 400;
+  color: #222222;
+}
+
+/* ===== 6. SMALLER SCREENS ===== */
+
+/* Tablets: less space on the sides of the header */
+@media (max-width: 1128px) {
+  .navbar-header {
+    padding: 16px 40px;
+  }
+}
+
+/* Phones: smaller header and the big search bar is hidden */
+@media (max-width: 744px) {
+  .navbar-header {
+    padding: 12px 24px;
+  }
+
+  .expanded-search-container {
+    display: none;
+  }
+}

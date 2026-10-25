@@ -1,0 +1,159 @@
+/* ==========================================================================
+   1. MAIN PAGE LAYOUT
+   Outer page container structured to fill minimum viewport height.
+   ========================================================================== */
+.locations-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+/* ==========================================================================
+   2. CONTENT WRAPPER
+   Adjusted top padding offset to 260px to clear the fixed glassmorphic header
+   and search pill bar completely, preventing the top listing card from being cut off.
+   ========================================================================== */
+.locations-content-wrapper {
+  padding-top: 260px; /* Offset clearing fixed header & floating search bar */
+  padding-bottom: 60px; /* Bottom spacing above footer */
+  max-width: 1000px;  /* Constrains maximum grid width for readable layout */
+  margin: 0 auto;     /* Centers wrapper on widescreen displays */
+  width: 90%;
+}
+
+/* Header heading text for total stays */
+.locations-heading {
+  font-size: 20px;
+  font-weight: 600;
+  color: #222222;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+/* Vertical stack container holding accommodation cards */
+.locations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Space between each listing card */
+}
+
+/* ==========================================================================
+   3. HORIZONTAL LOCATION CARD
+   Flexible horizontal layout matching the mockup design.
+   ========================================================================== */
+.location-card {
+  display: flex;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0; /* Clean border outline */
+  border-radius: 16px;       /* Soft rounded corners */
+  overflow: hidden;          /* Crops image corners to match border radius */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Subtle elevation drop shadow */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover elevation effect */
+.location-card:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Fixed thumbnail dimension box */
+.location-card-image-wrapper {
+  width: 280px;
+  height: 200px;
+  flex-shrink: 0; /* Prevents image shrink when details expand */
+}
+
+/* Cover aspect ratio fit for listing thumbnail */
+.location-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Right-hand side text details container */
+.location-card-details {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Takes up remaining horizontal card space */
+}
+
+.location-type {
+  font-size: 13px;
+  color: #717171;
+  margin-bottom: 4px;
+}
+
+.location-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #222222;
+  margin: 0 0 12px 0;
+}
+
+.location-specs {
+  font-size: 14px;
+  color: #717171;
+  margin: 0 0 4px 0;
+}
+
+.location-amenities {
+  font-size: 14px;
+  color: #717171;
+  margin: 0 0 24px 0;
+}
+
+/* Align star rating to bottom left, pricing to bottom right */
+.location-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: auto; /* Pushes footer row to bottom of card */
+}
+
+.location-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+}
+
+.star-icon {
+  color: #222222;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #222222;
+}
+
+.reviews-count {
+  color: #717171;
+}
+
+.price-amount {
+  font-size: 20px;
+  font-weight: 700;
+  color: #222222;
+}
+
+.price-period {
+  font-size: 14px;
+  color: #717171;
+}
+
+/* ==========================================================================
+   4. RESPONSIVE MEDIA QUERIES
+   Converts horizontal cards into vertical cards on smaller viewports.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .location-card {
+    flex-direction: column;
+  }
+
+  .location-card-image-wrapper {
+    width: 100%;
+    height: 220px;
+  }
+}

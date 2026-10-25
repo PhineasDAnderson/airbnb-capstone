@@ -1,0 +1,636 @@
+{
+  "info": {
+    "name": "Airbnb Capstone API",
+    "description": "Requests for every endpoint of the Airbnb backend. Run Login first so the token is saved.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": "testuser@example.com"
+    },
+    {
+      "key": "password",
+      "value": "test1234"
+    },
+    {
+      "key": "accommodationId",
+      "value": ""
+    },
+    {
+      "key": "createdAccommodationId",
+      "value": ""
+    },
+    {
+      "key": "reservationId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Creates a new user. 201 on success, 400 for missing fields, a short password or a bad email, 409 if the email is already used.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201 or 409\", function () { pm.expect([201, 409]).to.include(pm.response.code); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Logs in and saves the token in the collection variable called token.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });",
+                  "const data = pm.response.json();",
+                  "pm.collectionVariables.set(\"token\", data.token);"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Accommodations",
+      "item": [
+        {
+          "name": "Get all accommodations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations"
+              ]
+            },
+            "description": "Public. Saves the first listing id in the variable accommodationId.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });",
+                  "const list = pm.response.json();",
+                  "if (list.length) { pm.collectionVariables.set(\"accommodationId\", list[0]._id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get one accommodation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations/{{accommodationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations",
+                "{{accommodationId}}"
+              ]
+            },
+            "description": "Public. 400 for an invalid id, 404 if the listing is not found.",
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create accommodation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations"
+              ]
+            },
+            "description": "Needs a login token. The host is always the logged in user. Saves the new id in createdAccommodationId.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Postman test cabin\",\n  \"description\": \"A listing created from Postman.\",\n  \"location\": \"Cape Town, South Africa\",\n  \"address\": \"1 Test Street\",\n  \"pricePerNight\": 150,\n  \"images\": [\n    \"https://res.cloudinary.com/r3t5x7j7/image/upload/w_1200,q_auto,f_auto/Paris/1.jpg\"\n  ],\n  \"sleepingImage\": {\n    \"url\": \"https://res.cloudinary.com/r3t5x7j7/image/upload/w_1200,q_auto,f_auto/Paris/-6.jpg\",\n    \"caption\": \"Bedroom\"\n  },\n  \"amenities\": [\n    \"wifi\",\n    \"kitchen\"\n  ],\n  \"maxGuests\": 2,\n  \"bedrooms\": 1,\n  \"bathrooms\": 1,\n  \"type\": \"Entire home\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.expect(pm.response.code).to.eql(201); });",
+                  "pm.collectionVariables.set(\"createdAccommodationId\", pm.response.json()._id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update accommodation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations/{{createdAccommodationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations",
+                "{{createdAccommodationId}}"
+              ]
+            },
+            "description": "Host only. 400 for an invalid id, 404 if not found, 403 if the user is not the host.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Postman test cabin (updated)\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete accommodation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations/{{createdAccommodationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations",
+                "{{createdAccommodationId}}"
+              ]
+            },
+            "description": "Host only. Deletes the listing that was created by the Create request."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reservations",
+      "item": [
+        {
+          "name": "Create reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "Needs a login token. The server fills in bookedBy, propertyName and totalNights. Saves the id in reservationId.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"accommodationId\": \"{{accommodationId}}\",\n  \"checkInDate\": \"2026-12-20\",\n  \"checkOutDate\": \"2026-12-22\",\n  \"numberOfGuests\": 2,\n  \"totalPrice\": 500\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 201\", function () { pm.expect(pm.response.code).to.eql(201); });",
+                  "const res = pm.response.json();",
+                  "const id = res._id || (res.reservation && res.reservation._id);",
+                  "if (id) { pm.collectionVariables.set(\"reservationId\", id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get my reservations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations"
+              ]
+            },
+            "description": "Returns only the logged in user's reservations."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update reservation",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "{{reservationId}}"
+              ]
+            },
+            "description": "Own reservations only. Can change the dates, guests or price.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numberOfGuests\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete reservation",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reservations",
+                "{{reservationId}}"
+              ]
+            },
+            "description": "Own reservations only. 400 for an invalid id, 404 if not found."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 200\", function () { pm.expect(pm.response.code).to.eql(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error checks",
+      "item": [
+        {
+          "name": "No token gives 401",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"No token\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 401\", function () { pm.expect(pm.response.code).to.eql(401); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Invalid id gives 400",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations/123",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations",
+                "123"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 400\", function () { pm.expect(pm.response.code).to.eql(400); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Unknown route gives 404",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/banana",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "banana"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 404\", function () { pm.expect(pm.response.code).to.eql(404); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Someone else's listing gives 403",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/accommodations/{{accommodationId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "accommodations",
+                "{{accommodationId}}"
+              ]
+            },
+            "description": "Log in as a user who does NOT own the listing before sending this. The seeded listings belong to the account used for the seed.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status is 403\", function () { pm.expect(pm.response.code).to.eql(403); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
