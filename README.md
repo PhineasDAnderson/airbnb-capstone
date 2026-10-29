@@ -2,12 +2,19 @@
 
 An Airbnb look-alike built from the Figma designs. It has a public site where people browse and reserve stays, an admin area where a logged in host manages listings, and a Node.js API behind both.
 
+## Live links
+
+- Website: https://airbnb-capstone-client.vercel.app
+- API: https://airbnb-backend-api.vercel.app (example: https://airbnb-backend-api.vercel.app/api/accommodations)
+- GitHub: https://github.com/PhineasDAnderson/airbnb-capstone
+
 ## Tech used
 
 - Frontend: React (Vite), react-router-dom, axios, react-datepicker
 - Backend: Node.js, Express, MongoDB Atlas with Mongoose
 - Login: JWT and bcryptjs
 - Images: Cloudinary (uploaded straight from the admin page)
+- Hosting: Vercel
 
 ## Features
 
@@ -34,6 +41,7 @@ client/
   src/pages/                       locations page and view reservations
   src/views/                       admin dashboard, listing details, login
   src/api.js                       axios helper that adds the token to requests
+  vercel.json                      sends every path to index.html so refresh works
 ```
 
 ## Setup
@@ -76,9 +84,51 @@ Client (`client/.env`)
 | --- | --- |
 | `VITE_API_URL` | Address of the API, for example `http://localhost:5000/api` |
 
+## Deployment
+
+The brief mentions Heroku. Heroku no longer has a free plan, so the project is hosted on Vercel instead. The code is on GitHub and Vercel builds it from there. There are two Vercel projects made from the same GitHub repository: one for the API and one for the website.
+
+### Development and production values
+
+| Variable | Development (local) | Production (Vercel) |
+| --- | --- | --- |
+| `MONGO_URI` | Atlas connection string in `airbnb-backend/.env` | Same connection string, set in the backend Vercel project |
+| `JWT_SECRET` | Any secret text in `airbnb-backend/.env` | A secret set in the backend Vercel project |
+| `CLIENT_URL` | `http://localhost:5173` (default) | `https://airbnb-capstone-client.vercel.app` |
+| `VITE_API_URL` | `http://localhost:5000/api` | `https://airbnb-backend-api.vercel.app/api` |
+
+### Steps
+
+1. MongoDB Atlas
+   - In Network Access add the address `0.0.0.0/0`. Vercel does not have a fixed IP address, so the database has to accept connections from anywhere.
+
+2. GitHub
+   - Push the project to a GitHub repository. The `.gitignore` keeps `.env` and `node_modules` out of the repository.
+
+3. Backend on Vercel
+   - Add a new project and import the repository.
+   - Root Directory: `airbnb-backend` (Express preset)
+   - Environment variables: `MONGO_URI`, `JWT_SECRET` and `CLIENT_URL`
+   - `server.js` exports the Express app so Vercel can run it as a serverless function.
+   - Check the API: the root address shows "Airbnb Capstone Backend API is running..." and `/api/accommodations` returns the listings.
+
+4. Client on Vercel
+   - Add another project from the same repository.
+   - Root Directory: `client` (Vite preset)
+   - Environment variable: `VITE_API_URL` set to the backend address followed by `/api`
+   - `client/vercel.json` sends every path to `index.html`, so refreshing a page like `/locations` works.
+
+5. Connect the two
+   - Set `CLIENT_URL` in the backend project to the website address (no slash at the end), then redeploy the backend. CORS only allows that address.
+
+6. Sample listings
+   - Run `node seed.js your-email@example.com` inside `airbnb-backend` with `MONGO_URI` pointing to the same Atlas database that Vercel uses.
+
+Every push to the `main` branch on GitHub makes Vercel deploy both projects again. When an environment variable is changed in Vercel, the project has to be redeployed for the change to work.
+
 ## API endpoints
 
-Base URL: `http://localhost:5000/api`. Routes marked "Token" need the header `Authorization: Bearer <token>`.
+Base URL: `http://localhost:5000/api` when running locally, or `https://airbnb-backend-api.vercel.app/api` when deployed. Routes marked "Token" need the header `Authorization: Bearer <token>`.
 
 ### Auth
 
@@ -110,7 +160,7 @@ Any other URL returns 404 with `{ "message": "Route not found" }`.
 
 ## Testing
 
-All endpoints were tested in Postman. The file `Airbnb-API.postman_collection.json` can be imported into Postman. It has a request for every endpoint, and the Login request saves the token for the others.
+All endpoints were tested in Postman. The file `Airbnb-API.postman_collection.json` can be imported into Postman. It has a request for every endpoint, and the Login request saves the token for the others. All 15 requests pass in the Postman Runner.
 
 Error checks that were run:
 
@@ -118,6 +168,8 @@ Error checks that were run:
 - An invalid id returns 400
 - An unknown route returns 404
 - Updating or deleting another user's listing returns 403
+
+The deployed site was also checked by hand: browsing and refreshing the locations page, login, reserving a stay, viewing reservations, and creating (with image upload), editing and deleting a listing in the admin area.
 
 ## Notes
 
